@@ -2,6 +2,8 @@
 
 export default function statBlock(){
 
+    //TO DO : ADD TABLE OF SKILLS; USE CHATGPT TO MAKE THE TABLE
+
     function formatStats(score:number){
         let newStat:number;
         switch(true){
