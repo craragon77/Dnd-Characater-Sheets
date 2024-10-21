@@ -130,7 +130,7 @@ export default function statBlock(){
         //this dynamically lists all the skill abilities for a given skill based on the state hooks above
         return statSkill.map((skill, idx) => {
             return<>
-                <li id={`${statSkill}_${idx}`}>
+                <li id={`${skill}_${idx}`}>
                     <div>
                         <input id={`${skill.name}_${idx}`} type="radio" aria-checked={skill.proficient ? true : false} checked={skill.proficient ? true : false}/>
                         <label htmlFor={`${skill.name}_${idx}`}>{`${skill.name}`}</label>
@@ -143,7 +143,7 @@ export default function statBlock(){
     function mapStatsAndSkills(){
         //creates each row of the stat block; the skill label, the skill level, and the skill modifier
         const statsValues = Object.values(statBlock);
-        const statsKeys = Object.keys(statBlock)
+        const statsKeys = Object.keys(statBlock);
         return statsKeys.map((stat:string, idx:number) => {
             let capitalLabel = stat.charAt(0).toUpperCase() + stat.slice(1);
             let listSkillsArg = returnStatHook(stat);
@@ -154,7 +154,7 @@ export default function statBlock(){
                     <p className="text-2xl font-bold">{formatStats(statsValues[idx])}</p>
                     <p className="font-bold">{capitalLabel}</p>
                 </div>
-                <ul>{listSkills(listSkillsArg)}</ul>
+                <ul className="p-2">{listSkills(listSkillsArg)}</ul>
             </div>
         })
     }
