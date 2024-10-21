@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 
 export default function statBlock(){
+    const [statNames, setStatNames] = useState(['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'])
     const [statBlock, setStatBlock] = useState({
         'strength': 0,
         'dexterity': 0,
@@ -63,7 +64,7 @@ export default function statBlock(){
             'charisma': 14
         });
         setProfBonus(2);
-        
+
     },[]);
 
     //TO DO : ADD TABLE OF SKILLS; USE CHATGPT TO MAKE THE TABLE
@@ -104,59 +105,70 @@ export default function statBlock(){
             default:
             return '-5'; // For scores below 2
         }
-    }
+    };
+
+    function returnStatHook(stat:string){
+        switch(stat){
+            case 'strength':
+                return strengthSkills;
+            case 'dexterity':
+                return dexteritySkills;
+            case 'constitution':
+                return constitutionSkills;
+            case 'intelligence':
+                return intelligenceSkills;
+            case 'wisdom':
+                return wisdomSkills;
+            case 'charisma':
+                return charismaSkills
+            default:
+                return charismaSkills;
+        };
+    };
 
     function listSkills(statSkill: {name: string, proficient: boolean}[]){
+        //this dynamically lists all the skill abilities for a given skill based on the state hooks above
         return statSkill.map((skill, idx) => {
             return<>
                 <li id={`${statSkill}_${idx}`}>
                     <div>
                         <input id={`${skill.name}_${idx}`} type="radio" aria-checked={skill.proficient ? true : false} checked={skill.proficient ? true : false}/>
-                        <label htmlFor={`${skill.name}_${idx}`}>{`${skill.name}_${idx}`}</label>
+                        <label htmlFor={`${skill.name}_${idx}`}>{`${skill.name}`}</label>
                     </div>
                 </li>
             </>
         })
     };
 
+    function mapStatsAndSkills(){
+        //creates each row of the stat block; the skill label, the skill level, and the skill modifier
+        const statsValues = Object.values(statBlock);
+        const statsKeys = Object.keys(statBlock)
+        return statsKeys.map((stat:string, idx:number) => {
+            let capitalLabel = stat.charAt(0).toUpperCase() + stat.slice(1);
+            let listSkillsArg = returnStatHook(stat);
+            console.log('listSkillArg', listSkillsArg);
+            return <div key={idx} className="flex m-5 p-2 border-4 border-orange-500">
+                <div className="border-4 border-indigo-500 m-3 p-3 text-center">
+                    <p>{statsValues[idx]}</p>
+                    <p className="text-2xl font-bold">{formatStats(statsValues[idx])}</p>
+                    <p className="font-bold">{capitalLabel}</p>
+                </div>
+                <ul>{listSkills(listSkillsArg)}</ul>
+            </div>
+        })
+    }
+
     return(
         <>
+            <button className="btn btn-primary">Test</button>
             <div>
                 <p>Proficiency Bonus: {profBonus}</p>
                 <p>Inspiration:</p>
             </div>
+            {mapStatsAndSkills()}
             <div>
-                <p>Strength: {statBlock.strength}</p><br/>
-                <p>{formatStats(statBlock.strength)}</p>
-                <ul>{listSkills(strengthSkills)}</ul>
-            </div>
-            <div>
-                <p>Dexterity: {statBlock.dexterity}</p>
-                <p>{formatStats(statBlock.dexterity)}</p>
-                <ul>{listSkills(dexteritySkills)}</ul>
-            </div>
-            <div>
-                <p>Constitution: {statBlock.constitution}</p>
-                <p>{formatStats(statBlock.constitution)}</p>
-                <ul>{listSkills(constitutionSkills)}</ul>
-            </div>
-            <div>
-                <p>Intelligence: {statBlock.intelligence}</p>
-                <p>{formatStats(statBlock.intelligence)}</p>
-                <ul>{listSkills(intelligenceSkills)}</ul>
-            </div>
-            <div>
-                <p>Wisdom: {statBlock.wisdom}</p>
-                <p>{formatStats(statBlock.wisdom)}</p>
-                <ul>{listSkills(wisdomSkills)}</ul>
-            </div>
-            <div>
-                <p>Charisma: {statBlock.charisma}</p>
-                <p>{formatStats(statBlock.charisma)}</p>
-                <ul>{listSkills(charismaSkills)}</ul>
-            </div>
-            <div>
-                <p>Passive Wisdon: (passiveWisdom)</p>
+                <p>Passive Wisdon: {passiveWisdom}</p>
             </div>
         </>
     )
